@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تعليمات المحاكيات - ذا سويم</title>
+    <style>
+        /* --- الخطوط والألوان الأساسية --- */
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;500;800&display=swap');
+
+        :root {
+            --bg-color: #050505;
+            --card-bg: rgba(25, 25, 25, 0.8);
+            --text-color: #ffffff;
+            --gold: #D4AF37;
+            --neon-blue: #00f3ff;
+            --neon-purple: #bc13fe;
+            --neon-red: #ff003c;
+            --glass: rgba(255, 255, 255, 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none; /* منع تحديد النص للمظهر التطبيقي */
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Tajawal', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- خلفية الدوائر النيون المتحركة --- */
+        #particles-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-10vh) scale(0); opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { transform: translateY(110vh) scale(1); opacity: 0; }
+        }
+
+        /* --- التنسيق العام --- */
+        .container {
+            width: 90%;
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+            padding-bottom: 60px;
+            flex: 1;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .main-logo {
+            width: 150px; /* حجم كبير جدا كما طلب */
+            margin-top: 20px;
+            filter: drop-shadow(0 0 10px var(--neon-blue));
+            animation: pulse 3s infinite;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin: 20px 0 40px;
+            color: var(--text-color);
+            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+            font-weight: 800;
+        }
+
+        h2, h3 {
+            color: var(--gold);
+            margin-bottom: 15px;
+        }
+
+        p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+            color: #ddd;
+            font-size: 14px;
+        }
+
+        /* --- الأزرار الفخمة --- */
+        .btn {
+            background: linear-gradient(145deg, #1e1e1e, #2a2a2a);
+            border: 1px solid var(--glass);
+            border-right: 4px solid var(--gold);
+            color: #fff;
+            padding: 15px 20px;
+            margin: 10px 0;
+            width: 100%;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.5);
+            text-decoration: none;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn img {
+            width: 40px;
+            height: 40px;
+            margin-left: 15px;
+            margin: 0; /* reset */
+        }
+
+        .btn-content {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .btn-icon {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            margin-left: 15px;
+        }
+
+        .btn-text {
+            flex-grow: 1;
+            text-align: right;
+        }
+
+        .sub-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--neon-blue);
+            border-right: none;
+            text-align: center;
+            justify-content: center;
+            margin-top: 5px;
+        }
+
+        /* --- الصفحات (Sections) --- */
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- البطاقات --- */
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        /* --- الصور الخاصة --- */
+        .logo-large {
+            width: 120px;
+            margin-bottom: 15px;
+        }
+        
+        .logo-giant {
+             width: 250px;
+             margin-bottom: 20px;
+        }
+
+        .neon-border-volcano {
+            border-radius: 15px;
+            margin: 20px auto;
+            box-shadow: 0 0 10px var(--neon-red);
+            animation: volcano 3s infinite alternate;
+        }
+
+        @keyframes volcano {
+            0% { box-shadow: 0 0 10px var(--neon-red), 0 0 20px #ff4500; }
+            100% { box-shadow: 0 0 25px var(--neon-red), 0 0 40px #ff4500, 0 0 60px orange; }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* --- معرض الصور (Marquee) --- */
+        .marquee-container {
+            width: 100%;
+            overflow-x: auto; /* يسمح بالسحب */
+            white-space: nowrap;
+            padding: 10px 0;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            margin: 15px 0;
+            scrollbar-width: none; /* إخفاء شريط التمرير */
+        }
+        .marquee-container::-webkit-scrollbar { display: none; }
+
+        .marquee-content {
+            display: inline-flex;
+            gap: 15px;
+            animation: scroll 15s linear infinite;
+        }
+        
+        /* التوقف عند اللمس للتحكم اليدوي */
+        .marquee-container:hover .marquee-content, 
+        .marquee-container:active .marquee-content {
+            animation-play-state: paused;
+        }
+
+        .marquee-content img {
+            height: 150px;
+            width: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+            flex-shrink: 0;
+        }
+
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); } /* تحرك لليمين بالنسبة للمحتوى العربي */
+        }
+
+        /* --- أكواد النسخ --- */
+        .code-box {
+            background: #000;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 10px;
+            font-family: monospace;
+            direction: ltr;
+            overflow-x: auto;
+            color: var(--neon-blue);
+            font-size: 12px;
+        }
+        
+        .copy-btn {
+            background: var(--gold);
+            color: #000;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 5px;
+            margin-top: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        /* --- الفوتر --- */
+        footer {
+            margin-top: auto;
+            text-align: center;
+            padding: 20px;
+            font-size: 12px;
+            color: #888;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .footer-link {
+            color: #888;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .footer-link:hover, .footer-link:active {
+            color: var(--neon-blue);
+        }
+
+        /* --- نافذة التنبيه --- */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(20, 20, 20, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid var(--gold);
+            z-index: 1000;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 999;
+        }
+        
+        /* Grid للأزرار الجانبية */
+        .grid-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="particles-container"></div>
+
+    <header class="container">
+        <img src="android.png" alt="Android Logo" class="main-logo">
+        <h1>تعليمات المحاكيات - ذا سويم</h1>
+    </header>
+
+    <main id="home-page" class="container page active">
+        
+        <div class="btn" onclick="showModal('قريباً')">
+            <div class="btn-content">
+                <img src="winlator.png" class="btn-icon" alt="Winlator">
+                <span class="btn-text">Winlator</span>
+            </div>
+        </div>
+
+        <div class="btn" onclick="showModal('قريباً')">
+            <div class="btn-content">
+                <img src="gamehup.png" class="btn-icon" alt="GameHub">
+                <span class="btn-text">GameHub</span>
+            </div>
+        </div>
+
+        <div class="btn" onclick="navigateTo('ps2-page')">
+            <div class="btn-content">
+                <img src="ps2.png" class="btn-icon" alt="PS2">
+                <span class="btn-text">محاكي بلايستيشن ²</span>
+            </div>
+        </div>
+
+        <div class="btn" onclick="navigateTo('ps1-page')">
+            <div class="btn-content">
+                <img src="ps1.png" class="btn-icon" alt="PS1">
+                <span class="btn-text">محاكي بلايستيشن ¹</span>
+            </div>
+        </div>
+
+    </main>
+
+    <section id="ps2-page" class="container page">
+        <button class="btn sub-btn" onclick="navigateTo('home-page')" style="width: auto; margin-bottom: 20px;">رجوع للقائمة</button>
+        
+        <div class="card">
+            <img src="ps2.png" class="logo-large" alt="NetherSX2">
+            <h2>NetherSX2</h2>
+            <div style="text-align: center; margin-bottom: 20px;">
+                <h3>ما هو محاكي Nethersx2؟</h3>
+                <p>هو محاكي لتشغيل ألعاب بلايستيشن ² على هواتف أندرويد.<br>
+                يتميز بأنه سريع، خفيف، ويدعم أغلب الألعاب بدون تهنيج، خاصة الأجهزة القوية.</p>
+            </div>
+        </div>
+
+        <button class="btn" onclick="navigateTo('ps2-versions')">نسخ المحاكي</button>
+        <button class="btn" onclick="navigateTo('ps2-compare')">ما هو الفرق بين النسخ</button>
+        
+        <div class="grid-buttons">
+            <button class="btn sub-btn" onclick="navigateTo('ps2-bios')">Bios</button>
+            <a href="https://files.catbox.moe/rd79om.mp4" target="_blank" class="btn sub-btn">اضافة مودات HD</a>
+            <a href="https://files.catbox.moe/4ycfuu.mp4" target="_blank" class="btn sub-btn">نقل التخزين</a>
+            <a href="https://files.catbox.moe/gsmpzq.mp4" target="_blank" class="btn sub-btn">اعدادات ضعيفة</a>
+        </div>
+
+        <button class="btn" onclick="navigateTo('ps2-covers')">غلافات الالعاب</button>
+        
+        <a href="https://youtu.be/vsNYFVxGCRE?si=3IdR7W9JeenbVeXc" target="_blank" class="btn" style="background: #cc0000; border-color: #ff3333;">
+            <span class="btn-text" style="text-align: center;">شرح اساسيات المحاكي (YouTube)</span>
+        </a>
+    </section>
+
+    <section id="ps2-versions" class="container page">
+        <button class="btn sub-btn" onclick="navigateTo('ps2-page')" style="width: auto;">رجوع</button>
+        
+        <div class="card">
+            <img src="ps2.png" class="logo-large" alt="NetherSX2">
+            <h3>Nethersx2 v2.2b</h3>
+            <a href="https://github.com/Trixarian/NetherSX2-patch/releases/download/2.2b/NetherSX2-v2.2b-4248.apk" class="btn sub-btn">تحميل</a>
+        </div>
+
+        <div class="card">
+            <img src="athersx2.png" class="logo-large" alt="AetherSX2">
+            <h3>AetherSX2 v1447</h3>
+            <a href="https://github.com/AetherSX2-backup/AetherSX2-builds/raw/master/custom-turnip/aethersx2-turnip-1447.apk" class="btn sub-btn">تحميل</a>
+        </div>
+
+        <div class="card">
+            <img src="athersx2 gold.png" class="logo-large" alt="Golden">
+            <h3>AetherSX2 XGolden v3</h3>
+            <a href="https://download4925.sfile.mobi/downloadfile/1884045/553021/6f32d7284d5b28ed8157fff4f3bf9fa7/aethersx2-xgolden-v3.apk?k=8b4485eeb759ac4fadd98ab58ea04e8f" class="btn sub-btn">تحميل</a>
+        </div>
+    </section>
+
+    <section id="ps2-compare" class="container page">
+        <button class="btn sub-btn" onclick="navigateTo('ps2-page')" style="width: auto;">رجوع</button>
+        
+        <div class="card" style="text-align: right;">
+            <h3>Nethersx2</h3>
+            <p>نسخة غير رسمية (Mod) مبنية على AetherSX2<br>
+            ✔ أسرع من النسخة الأصلية<br>
+            ✔ إعدادات جاهزة<br>
+            ✖ ليس مشروعًا رسميًا</p>
+            <hr style="border-color: #333; margin: 10px 0;">
+            
+            <h3>AetherSX2 (الأصلية)</h3>
+            <p>المحاكي الرسمي.<br>
+            ✔ مستقر جدًا<br>
+            ✔ أداء ممتاز للأجهزة القوية<br>
+            ✖ توقف الدعم</p>
+            <hr style="border-color: #333; margin: 10px 0;">
+
+            <h3>AetherSX2 XGolden</h3>
+            <p>نسخ مطوّرة (Modded).<br>
+            ✔ تحسينات سرعة<br>
+            ✔ دعم 1080p/4K<br>
+            ✖ قد تظهر مشاكل استقرار</p>
+        </div>
+        
+        <img src="allps2.png" class="neon-border-volcano" style="width: 100%;" alt="Comparison">
+    </section>
+
+    <section id="ps2-bios" class="container page">
+        <button class="btn sub-btn" onclick="navigateTo('ps2-page')" style="width: auto;">رجوع</button>
+        <div class="card">
+            <h3>📁 ملف BIOS؟</h3>
+            <p>هو ملف أساسي لتشغيل المحاكي.</p>
+        </div>
+
+        <div class="card">
+            <img src="bios.png" class="logo-large">
+            <h3>SCPH-70012 (USA)</h3>
+            <p>مثالي لألعاب أمريكا.</p>
+            <a href="https://pcsx2bios.com/wp-content/uploads/download/ps2/ps2-bios-usa.zip" class="btn sub-btn">تحميل</a>
+        </div>
+
+        <div class="card">
+            <img src="bios.png" class="logo-large">
+            <h3>SCPH-39004 (Europe)</h3>
+            <p>للألعاب الأوروبية (PAL).</p>
+            <a href="https://pcsx2bios.com/wp-content/uploads/download/ps2/ps2-bios-europe.zip" class="btn sub-btn">تحميل</a>
+        </div>
+
+        <div class="card">
+            <img src="bios.png" class="logo-large">
+            <h3>SCPH-10000 (Japan)</h3>
+            <p>للألعاب اليابانية.</p>
+            <a href="https://pcsx2bios.com/wp-content/uploads/download/ps2/ps2-bios-japan.zip" class="btn sub-btn">تحميل</a>
+        </div>
+        
+        <div class="card">
+            <img src="bios.png" class="logo-large">
+            <h3>SCPH-90006 (China)</h3>
+            <p>للألعاب الصينية.</p>
+            <a href="https://pcsx2bios.com/wp-content/uploads/download/ps2/ps2-bios-china-and-other.zip" class="btn sub-btn">تحميل</a>
+        </div>
+    </section>
+
+    <section id="ps2-covers" class="container page">
+        <button class="btn sub-btn" onclick="navigateTo('ps2-page')" style="width: auto;">رجوع</button>
+        
+        <h3>كود غلافات افتراضي</h3>
+        <div class="marquee-container">
+            <div class="marquee-content">
+                <img src="game1ps2.png"><img src="game2ps2.png"><img src="game3ps2.png">
+                <img src="game1ps2.png"><img src="game2ps2.png"><img src="game3ps2.png">
+                <img src="game1ps2.png"><img src="game2ps2.png"><img src="game3ps2.png">
+            </div>
+        </div>
+        <div class="code-box" id="code-ps2-def">https://raw.githubusercontent.com/xlenore/ps2-covers/main/covers/default/${serial}.jpg</div>
+        <button class="copy-btn" onclick="copyText('code-ps2-def')">نسخ الكود</button>
+
+        <hr style="border-color: #333; margin: 30px 0;">
+
+        <h3>كود غلافات ثلاثية الأبعاد</h3>
+        <div class="marquee-container">
+            <div class="marquee-content">
+                <img src="game3d1ps2.png"><img src="game3d2ps2.png"><img src="game3d3ps2.png">
+                <img src="game3d1ps2.png"><img src="game3d2ps2.png"><img src="game3d3ps2.png">
+                <img src="game3d1ps2.png"><img src="game3d2ps2.png"><img src="game3d3ps2.png">
+            </div>
+        </div>
+        <div class="code-box" id="code-ps2-3d">https://raw.githubusercontent.com/xlenore/ps2-covers/main/covers/3d/${serial}.png</div>
+        <button class="copy-btn" onclick="copyText('code-ps2-3d')">نسخ الكود</button>
+
+        <br><br>
+        <a href="https://files.catbox.moe/v5ac3d.mp4" target="_blank" class="btn sub-btn">طريقة اضافة الأكواد</a>
+    </section>
+
+    <section id="ps1-page" class="container page">
+        <button class="btn sub-btn" onclick="navigateTo('home-page')" style="width: auto; margin-bottom: 20px;">رجوع للقائمة</button>
+
+        <img src="ps1.png" class="logo-large" alt="PS1 Logo">
+        
+        <div class="card">
+            <h3>محاكي بلايستيشن ¹</h3>
+            <p>يتميز بالسرعة والاستقرار وجودة اللعب العالية. يشتغل على جميع المعالجات.</p>
+            <ul style="text-align: right; margin-right: 20px; font-size: 14px; color: #ccc;">
+                <li>يعمل بسرعة حتى على الأجهزة الضعيفة.</li>
+                <li>واجهة بسيطة.</li>
+                <li>دعم BIN / CUE / ISO.</li>
+                <li>تحسين رسومي.</li>
+                <li>دعم يد التحكم.</li>
+            </ul>
+        </div>
+
+        <a href="https://t.me/soi7m/248/783" target="_blank" class="btn">تحميل نسخة المعربه</a>
+        <a href="https://play.google.com/store/apps/details?id=com.github.stenzek.duckstation" target="_blank" class="btn">تحميل النسخة الأصلية</a>
+        
+        <a href="https://youtu.be/jhdO3v--fwA?si=eDFxLTNMTTbtbVPr" target="_blank" class="btn" style="background: #cc0000; border-color: #ff3333;">
+            <span class="btn-text" style="text-align: center;">شرح أساسيات المحاكي (YouTube)</span>
+        </a>
+
+        <a href="https://files.catbox.moe/cpg0bn.mp4" target="_blank" class="btn sub-btn">اضافة مودات HD</a>
+        <button class="btn sub-btn" onclick="navigateTo('ps1-covers')">غلافات الالعاب</button>
+        <button class="btn sub-btn" onclick="navigateTo('ps1-bios')">Bios</button>
+    </section>
+
+    <section id="ps1-covers" class="container page">
+        <button class="btn sub-btn" onclick="navigateTo('ps1-page')" style="width: auto;">رجوع</button>
+        
+        <h3>غلافات الالعاب افتراضي</h3>
+        <div class="marquee-container">
+            <div class="marquee-content">
+                <img src="game1ps1.png"><img src="game2ps1.png"><img src="game3ps1.png">
+                <img src="game1ps1.png"><img src="game2ps1.png"><img src="game3ps1.png">
+                <img src="game1ps1.png"><img src="game2ps1.png"><img src="game3ps1.png">
+            </div>
+        </div>
+        <div class="code-box" id="code-ps1-def">https://raw.githubusercontent.com/xlenore/psx-covers/main/covers/default/${serial}.jpg</div>
+        <button class="copy-btn" onclick="copyText('code-ps1-def')">نسخ الكود</button>
+
+        <hr style="border-color: #333; margin: 30px 0;">
+
+        <h3>غلافات الالعاب ثلاثية الأبعاد</h3>
+        <div class="marquee-container">
+            <div class="marquee-content">
+                <img src="3d1ps1.png"><img src="3d2ps1.png"><img src="3d3ps1.png">
+                <img src="3d1ps1.png"><img src="3d2ps1.png"><img src="3d3ps1.png">
+                <img src="3d1ps1.png"><img src="3d2ps1.png"><img src="3d3ps1.png">
+            </div>
+        </div>
+        <div class="code-box" id="code-ps1-3d">https://raw.githubusercontent.com/xlenore/psx-covers/main/covers/3d/${serial}.png</div>
+        <button class="copy-btn" onclick="copyText('code-ps1-3d')">نسخ الكود</button>
+        
+        <br><br>
+        <a href="https://files.catbox.moe/62br3e.mp4" target="_blank" class="btn sub-btn">طريقة اضافة الاكواد</a>
+    </section>
+
+    <section id="ps1-bios" class="container page">
+        <button class="btn sub-btn" onclick="navigateTo('ps1-page')" style="width: auto;">رجوع</button>
+        
+        <div class="card">
+            <h3>يتطلب استخدام BIOS</h3>
+            <p>لازم يكون موجود حتى يشتغل المحاكي.</p>
+        </div>
+
+        <div class="card">
+            <img src="bios.png" class="logo-large">
+            <h3>SCPH1001.BIN (USA)</h3>
+            <p>أشهر نسخة BIOS لأمريكا.</p>
+            <a href="https://psbios.me/download/ps1/SCPH1001.BIN" class="btn sub-btn">تحميل</a>
+        </div>
+
+        <div class="card">
+            <img src="bios.png" class="logo-large">
+            <h3>SCPH7502.BIN (Europe)</h3>
+            <p>مخصص لأوروبا (PAL).</p>
+            <a href="https://psbios.me/download/ps1/SCPH-7502.BIN" class="btn sub-btn">تحميل</a>
+        </div>
+
+        <div class="card">
+            <img src="bios.png" class="logo-large">
+            <h3>SCPH5500.BIN (Japan)</h3>
+            <p>مخصص لليابان.</p>
+            <a href="https://psbios.me/download/ps1/SCPH5500.BIN" class="btn sub-btn">تحميل</a>
+        </div>
+
+        <div class="card">
+            <img src="bios.png" class="logo-large">
+            <h3>SCPH7003.BIN (Global)</h3>
+            <p>نسخة شاملة تقريباً.</p>
+            <a href="https://psbios.me/download/ps1/SCPH7003.BIN" class="btn sub-btn">تحميل</a>
+        </div>
+    </section>
+
+    <footer>
+        <span style="font-size: 10px; opacity: 0.7;">© 2025 جميع الحقوق محفوظة لدى</span><br>
+        <a href="https://t.me/soi7m" class="footer-link">ذا سويم</a>
+    </footer>
+
+    <div class="overlay" id="overlay" onclick="closeModal()"></div>
+    <div class="modal" id="modal">
+        <h3 id="modal-text">نص التنبيه</h3>
+    </div>
+
+    <script>
+        // --- إدارة التنقل بين الصفحات ---
+        function navigateTo(pageId) {
+            // إخفاء كل الصفحات
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.classList.remove('active'));
+            
+            // إظهار الصفحة المطلوبة
+            document.getElementById(pageId).classList.add('active');
+            
+            // الصعود للأعلى
+            window.scrollTo(0, 0);
+        }
+
+        // --- إدارة النوافذ المنبثقة ---
+        function showModal(text) {
+            document.getElementById('modal-text').innerText = text;
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('modal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        // --- نسخ النصوص ---
+        function copyText(elementId) {
+            const text = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                showModal('تم النسخ بنجاح!');
+                setTimeout(closeModal, 1500);
+            }).catch(err => {
+                showModal('فشل النسخ');
+            });
+        }
+
+        // --- إنشاء خلفية الدوائر النيون ---
+        function createParticles() {
+            const container = document.getElementById('particles-container');
+            const colors = ['#00f3ff', '#bc13fe', '#ff003c', '#D4AF37'];
+            
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // خصائص عشوائية
+                const size = Math.random() * 15 + 5;
+                const left = Math.random() * 100;
+                const duration = Math.random() * 5 + 5;
+                const delay = Math.random() * 5;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${left}%`;
+                particle.style.background = color;
+                particle.style.boxShadow = `0 0 10px ${color}`;
+                particle.style.animationDuration = `${duration}s`;
+                particle.style.animationDelay = `-${delay}s`; // Start immediately at random positions
+                
+                container.appendChild(particle);
+            }
+        }
+
+        // تشغيل الخلفية عند التحميل
+        window.onload = createParticles;
+    </script>
+</body>
+</html>
