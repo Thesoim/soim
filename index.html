@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE SOIM - محاكيات</title>
+    <style>
+        /* --- الخطوط والألوان الأساسية (Dark Mode & Luxury) --- */
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;500;700;900&display=swap');
+
+        :root {
+            --bg-color: #0a0a0f; 
+            --card-bg: #16161e;
+            --primary-color: #5e6aff; 
+            --accent-color: #ffd700; 
+            --text-color: #ffffff;
+            --text-secondary: #aaaaaa;
+            --border-radius: 12px;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Cairo', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* --- تأثير الثلج (Snow Effect) --- */
+        #snow-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: fall linear infinite;
+        }
+        @keyframes fall {
+            to {
+                transform: translateY(105vh);
+            }
+        }
+
+        /* --- الهيدر والشعار --- */
+        header {
+            text-align: center;
+            padding: 30px 10px;
+            z-index: 10;
+        }
+        .main-logo {
+            width: 150px;
+            max-width: 80%;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 10px rgba(94, 106, 255, 0.5));
+        }
+        h1.site-title {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--text-color);
+            text-shadow: 0 0 10px var(--primary-color);
+            margin-top: 10px;
+        }
+
+        /* --- الحاويات والأقسام --- */
+        .container {
+            width: 95%;
+            max-width: 600px;
+            margin: 0 auto;
+            flex: 1;
+            padding-bottom: 50px;
+            z-index: 10;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- الأزرار والقوائم --- */
+        .btn-main {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--card-bg);
+            border: 1px solid #333;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow);
+            text-decoration: none;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-main:hover {
+            border-color: var(--primary-color);
+            background: #1f1f2e;
+        }
+        
+        /* --- تأثير الهزة عند الضغط (Shake Effect) --- */
+        @keyframes shake-soft {
+            0% { transform: scale(0.98) rotate(0deg); }
+            25% { transform: scale(0.98) rotate(-1deg); }
+            50% { transform: scale(0.98) rotate(1deg); }
+            75% { transform: scale(0.98) rotate(-1deg); }
+            100% { transform: scale(0.98) rotate(0deg); }
+        }
+
+        .btn-main:active, .action-btn:active, .back-btn:active, .copy-btn:active, .download-btn:active {
+            animation: shake-soft 0.2s ease-in-out;
+            border-color: var(--accent-color);
+            background: #252535;
+        }
+
+        .btn-img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+        }
+        .btn-text {
+            font-size: 1.2rem;
+            font-weight: 700;
+            flex: 1;
+            text-align: center;
+        }
+
+        /* --- رسائل التنبيه --- */
+        .popup-msg {
+            text-align: center;
+            color: var(--accent-color);
+            font-weight: bold;
+            margin-top: 10px;
+            display: none;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
+        /* --- تفاصيل الصفحات الداخلية --- */
+        .sub-page-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .page-logo {
+            width: 100px;
+            margin-bottom: 10px;
+        }
+        .description-box {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin: 20px 0;
+            line-height: 1.6;
+            font-size: 0.95rem;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .feature-list {
+            text-align: right;
+            list-style: none;
+            padding: 10px;
+        }
+        .feature-list li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-right: 20px;
+        }
+        .feature-list li::before {
+            content: "•";
+            color: var(--accent-color);
+            position: absolute;
+            right: 0;
+            font-size: 1.5em;
+            line-height: 0.8;
+        }
+
+        /* --- شبكة الأزرار الفرعية --- */
+        .grid-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .action-btn {
+            background: linear-gradient(45deg, #2c3e50, #000000);
+            border: 1px solid #444;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: block;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            transition: 0.2s;
+        }
+        .action-btn:hover {
+            background: linear-gradient(45deg, var(--primary-color), #000000);
+            border-color: var(--primary-color);
+        }
+        .full-width {
+            grid-column: span 2;
+        }
+
+        /* --- قسم الـ BIOS --- */
+        .bios-card {
+            background: var(--card-bg);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            border: 1px solid #333;
+        }
+        .bios-img {
+            width: 100%;
+            max-width: 200px;
+            height: auto;
+            margin: 10px 0;
+        }
+        .download-btn {
+            background: #27ae60;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 10px;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(39, 174, 96, 0.4);
+            transition: transform 0.2s;
+        }
+
+        /* --- شريط الصور المتحرك --- */
+        .carousel-wrapper {
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+            margin: 20px 0;
+            background: rgba(0,0,0,0.3);
+            padding: 10px 0;
+            border-radius: var(--border-radius);
+        }
+        .carousel-track {
+            display: inline-block;
+            animation: scroll 10s linear infinite;
+        }
+        .carousel-track:hover {
+            animation-play-state: paused;
+            cursor: grab;
+        }
+        .carousel-img {
+            height: 150px;
+            width: auto;
+            margin: 0 10px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            vertical-align: middle;
+            display: inline-block;
+        }
+
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(50%); }
+        }
+
+        /* --- صندوق النسخ --- */
+        .code-box-container {
+            background: #222;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            border: 1px dashed #555;
+            position: relative;
+            text-align: center;
+        }
+        .code-text {
+            font-family: monospace;
+            color: var(--accent-color);
+            word-break: break-all;
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .copy-btn {
+            background: #444;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: 0.2s;
+        }
+
+        /* --- زر العودة --- */
+        .back-btn {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--text-secondary);
+            padding: 5px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            display: inline-block;
+            transition: 0.2s;
+        }
+
+        /* --- الفوتر --- */
+        footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            background: #08080c;
+            border-top: 1px solid #222;
+            margin-top: auto;
+        }
+        .footer-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        .footer-link:hover {
+            color: var(--accent-color);
+        }
+
+        /* --- تصميم عداد الزوار --- */
+        .visitors-box {
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            justify-content: center; /* توسيط العنصر المتبقي */
+            align-items: center;
+            backdrop-filter: blur(4px);
+            box-shadow: 0 0 10px rgba(94, 106, 255, 0.3);
+            margin-bottom: 15px;
+        }
+
+        .visitor-item {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-width: 100px;
+        }
+
+        .visitor-item .label {
+            font-size: 1rem; /* تكبير الخط قليلاً ليكون أوضح بعد الحذف */
+            color: #ffd700;
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        /* تنسيق صور العدادات لتظهر كأنها نص */
+        .counter-img {
+            height: 20px;
+            display: block;
+            border-radius: 4px;
+            opacity: 0.9;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="snow-container"></div>
+
+    <header>
+        <img src="android.png" alt="Android Logo" class="main-logo">
+        <h1 class="site-title">تعليمات المحاكيات - ذا سويم</h1>
+    </header>
+
+    <div class="container" id="main-content">
+        
+        <div id="main-menu" class="fade-in">
+            <div class="btn-main" onclick="handleBtnClick('winlator-msg')">
+                <img src="winlator.png" alt="Winlator" class="btn-img">
+                <span class="btn-text">Winlator</span>
+            </div>
+            <div id="winlator-msg" class="popup-msg">قريبا</div>
+
+            <div class="btn-main" onclick="handleBtnClick('gamehub-msg')">
+                <img src="gamehup.png" alt="GameHub" class="btn-img">
+                <span class="btn-text">GameHub</span>
+            </div>
+            <div id="gamehub-msg" class="popup-msg">قريبا</div>
+
+            <div class="btn-main" onclick="navigateTo('ps2-home')">
+                <img src="ps2.png" alt="PS2" class="btn-img">
+                <span class="btn-text">محاكي بلايستيشن ²</span>
+            </div>
+
+            <div class="btn-main" onclick="navigateTo('ps1-home')">
+                <img src="ps1.png" alt="PS1" class="btn-img">
+                <span class="btn-text">محاكي بلايستيشن ¹</span>
+            </div>
+        </div>
+
+        <div id="ps2-home" class="hidden fade-in">
+            <button class="back-btn" onclick="navigateTo('main-menu')">← رجوع للقائمة</button>
+            
+            <div class="sub-page-header">
+                <img src="ps2.png" alt="PS2 Logo" class="page-logo">
+                <h2>NetherSX2</h2>
+            </div>
+
+            <div class="description-box">
+                <h3>ما هو محاكي Nethersx2؟</h3>
+                <p>هو محاكي لتشغيل ألعاب بلايستيشن ² على هواتف أندرويد.<br>
+                يتميز بأنه سريع، خفيف، ويدعم أغلب الألعاب بدون تهنيج، خاصة الأجهزة القوية.</p>
+            </div>
+
+            <a href="https://youtu.be/vsNYFVxGCRE?si=3IdR7W9JeenbVeXc" target="_blank" class="action-btn full-width" style="margin-bottom: 20px; background: #c0392b;">شرح اساسيات المحاكي (يوتيوب)</a>
+
+            <div class="grid-buttons">
+                <div class="action-btn" onclick="navigateTo('ps2-bios')">Bios</div>
+                <a href="https://files.catbox.moe/rd79om.mp4" target="_blank" class="action-btn">اضافة مودات HD</a>
+                <a href="https://files.catbox.moe/4ycfuu.mp4" target="_blank" class="action-btn">نقل التخزين</a>
+                <a href="https://files.catbox.moe/gsmpzq.mp4" target="_blank" class="action-btn">اعدادات للاجهزة الضعيفة</a>
+                <div class="action-btn full-width" onclick="navigateTo('ps2-covers')">غلافات الالعاب</div>
+            </div>
+        </div>
+
+        <div id="ps2-bios" class="hidden fade-in">
+            <button class="back-btn" onclick="navigateTo('ps2-home')">← رجوع</button>
+            <div class="description-box">
+                <h3>📁 ملف BIOS؟</h3>
+                <p>BIOS هو ملف أساسي من جهاز PS2 نفسه، لازم يكون موجود حتى يشتغل المحاكي. بدون الـ BIOS المحاكي ما يقدر يشغل الألعاب.</p>
+            </div>
+
+            <div class="bios-card">
+                <img src="bios.png" alt="Bios USA" class="bios-img">
+                <h4>SCPH-70012 (الولايات المتحدة الأمريكية)</h4>
+                <p style="font-size:0.8rem; margin:10px 0; color:#ccc;">مثالي لألعاب NTSC في أمريكا الشمالية. يوفر توافقًا ممتازًا مع معظم ألعاب الفيديو الأمريكية.</p>
+                <a href="https://pcsx2bios.com/wp-content/uploads/download/ps2/ps2-bios-usa.zip" class="download-btn">تحميل</a>
+            </div>
+
+            <div class="bios-card">
+                <img src="bios.png" alt="Bios Europe" class="bios-img">
+                <h4>SCPH-39004 (أوروبا)</h4>
+                <p style="font-size:0.8rem; margin:10px 0; color:#ccc;">الأفضل لألعاب PAL من أوروبا وأستراليا. يدعم الألعاب التي قد تعمل بمستويات فيديو مختلفة (٥٠ هرتز).</p>
+                <a href="https://pcsx2bios.com/wp-content/uploads/download/ps2/ps2-bios-europe.zip" class="download-btn">تحميل</a>
+            </div>
+
+            <div class="bios-card">
+                <img src="bios.png" alt="Bios Japan" class="bios-img">
+                <h4>SCPH-10000 (اليابان)</h4>
+                <p style="font-size:0.8rem; margin:10px 0; color:#ccc;">لا غنى عنه إذا كنت ترغب في لعب ألعاب NTSC-J، بما في ذلك العديد من الألعاب الكلاسيكية الحصرية لليابان.</p>
+                <a href="https://pcsx2bios.com/wp-content/uploads/download/ps2/ps2-bios-japan.zip" class="download-btn">تحميل</a>
+            </div>
+
+            <div class="bios-card">
+                <img src="bios.png" alt="Bios China" class="bios-img">
+                <h4>SCPH-90006 (الصين)</h4>
+                <p style="font-size:0.8rem; margin:10px 0; color:#ccc;">يدعم ألعابًا خاصة بالصين، مثالي لاستكشاف محتوى مقيد إقليميًا.</p>
+                <a href="https://pcsx2bios.com/wp-content/uploads/download/ps2/ps2-bios-china-and-other.zip" class="download-btn">تحميل</a>
+            </div>
+        </div>
+
+        <div id="ps2-covers" class="hidden fade-in">
+            <button class="back-btn" onclick="navigateTo('ps2-home')">← رجوع</button>
+            <h3 style="text-align:center;">كود غلافات افتراضي</h3>
+            
+            <div class="carousel-wrapper">
+                <div class="carousel-track">
+                    <img src="game1ps2.png" class="carousel-img">
+                    <img src="game2ps2.png" class="carousel-img">
+                    <img src="game3ps2.png" class="carousel-img">
+                    <img src="game1ps2.png" class="carousel-img">
+                    <img src="game2ps2.png" class="carousel-img">
+                    <img src="game3ps2.png" class="carousel-img">
+                </div>
+            </div>
+            
+            <div class="code-box-container">
+                <span class="code-text" id="code-ps2-def">https://raw.githubusercontent.com/xlenore/ps2-covers/main/covers/default/${serial}.jpg</span>
+                <button class="copy-btn" onclick="copyToClipboard('code-ps2-def')">نسخ الكود</button>
+            </div>
+
+            <hr style="margin: 30px 0; border-color: #333;">
+
+            <h3 style="text-align:center;">كود غلافات ثلاثية الأبعاد</h3>
+            <div class="carousel-wrapper">
+                <div class="carousel-track">
+                    <img src="game3d1ps2.png" class="carousel-img">
+                    <img src="game3d2ps2.png" class="carousel-img">
+                    <img src="game3d3ps2.png" class="carousel-img">
+                    <img src="game3d1ps2.png" class="carousel-img">
+                    <img src="game3d2ps2.png" class="carousel-img">
+                    <img src="game3d3ps2.png" class="carousel-img">
+                </div>
+            </div>
+
+            <div class="code-box-container">
+                <span class="code-text" id="code-ps2-3d">https://raw.githubusercontent.com/xlenore/ps2-covers/main/covers/3d/${serial}.png</span>
+                <button class="copy-btn" onclick="copyToClipboard('code-ps2-3d')">نسخ الكود</button>
+            </div>
+
+            <a href="https://files.catbox.moe/v5ac3d.mp4" target="_blank" class="action-btn full-width" style="margin-top: 20px;">طريقة اضافة الأكواد</a>
+        </div>
+
+
+        <div id="ps1-home" class="hidden fade-in">
+            <button class="back-btn" onclick="navigateTo('main-menu')">← رجوع للقائمة</button>
+            
+            <div class="sub-page-header">
+                <img src="ps1.png" alt="PS1 Logo" class="page-logo">
+            </div>
+
+            <div class="description-box">
+                <p>هو محاكي لتشغيل ألعاب بلايستيشن ¹ على الأندرويد. يتميز بالسرعة والاستقرار وجودة اللعب العالية ويُعد من أفضل المحاكيات من حيث الأداء وسهولة الاستخدام يشتغل على جميع المعالجات.</p>
+                <h4>الميزات:</h4>
+                <ul class="feature-list">
+                    <li>يعمل بسرعة حتى على الأجهزة الضعيفة.</li>
+                    <li>واجهة بسيطة وسهلة.</li>
+                    <li>دعم ملفات BIN / CUE / ISO.</li>
+                    <li>تحسينات رسومية ورفع الدقة.</li>
+                    <li>حفظ تلقائي وحالات لعب.</li>
+                    <li>دعم يد التحكم والبلوتوث.</li>
+                </ul>
+            </div>
+
+            <a href="https://youtu.be/jhdO3v--fwA?si=eDFxLTNMTTbtbVPr" target="_blank" class="action-btn full-width" style="background: #c0392b;">شرح أساسيات المحاكي (يوتيوب)</a>
+
+            <div class="grid-buttons">
+                <a href="https://files.catbox.moe/cpg0bn.mp4" target="_blank" class="action-btn">اضافة مودات HD</a>
+                <div class="action-btn" onclick="navigateTo('ps1-bios')">Bios</div>
+                <div class="action-btn full-width" onclick="navigateTo('ps1-covers')">غلافات الالعاب</div>
+            </div>
+        </div>
+
+        <div id="ps1-covers" class="hidden fade-in">
+            <button class="back-btn" onclick="navigateTo('ps1-home')">← رجوع</button>
+            <h3 style="text-align:center;">غلافات الالعاب افتراضي</h3>
+            
+            <div class="carousel-wrapper">
+                <div class="carousel-track">
+                    <img src="game1ps1.png" class="carousel-img">
+                    <img src="game2ps1.png" class="carousel-img">
+                    <img src="game3ps1.png" class="carousel-img">
+                    <img src="game1ps1.png" class="carousel-img">
+                    <img src="game2ps1.png" class="carousel-img">
+                    <img src="game3ps1.png" class="carousel-img">
+                </div>
+            </div>
+            
+            <div class="code-box-container">
+                <span class="code-text" id="code-ps1-def">https://raw.githubusercontent.com/xlenore/psx-covers/main/covers/default/${serial}.jpg</span>
+                <button class="copy-btn" onclick="copyToClipboard('code-ps1-def')">نسخ الكود</button>
+            </div>
+
+            <hr style="margin: 30px 0; border-color: #333;">
+
+            <h3 style="text-align:center;">غلافات الالعاب ثلاثية الأبعاد</h3>
+            <div class="carousel-wrapper">
+                <div class="carousel-track">
+                    <img src="3d1ps1.png" class="carousel-img">
+                    <img src="3d2ps1.png" class="carousel-img">
+                    <img src="3d3ps1.png" class="carousel-img">
+                    <img src="3d1ps1.png" class="carousel-img">
+                    <img src="3d2ps1.png" class="carousel-img">
+                    <img src="3d3ps1.png" class="carousel-img">
+                </div>
+            </div>
+
+            <div class="code-box-container">
+                <span class="code-text" id="code-ps1-3d">https://raw.githubusercontent.com/xlenore/psx-covers/main/covers/3d/${serial}.png</span>
+                <button class="copy-btn" onclick="copyToClipboard('code-ps1-3d')">نسخ الكود</button>
+            </div>
+
+            <a href="https://files.catbox.moe/62br3e.mp4" target="_blank" class="action-btn full-width" style="margin-top: 20px;">طريقة اضافة الاكواد</a>
+        </div>
+
+        <div id="ps1-bios" class="hidden fade-in">
+            <button class="back-btn" onclick="navigateTo('ps1-home')">← رجوع</button>
+            <div class="description-box">
+                <h3 style="color: var(--accent-color);">يتطلب استخدام BIOS لجهاز 1 PlayStation</h3>
+                <p>يُعد BIOS ضروريا لمحاكاة ألعاب PS1، يدعم أجهزة PS1 بدقة. بدونه لا يشتغل المحاكي.</p>
+            </div>
+
+            <div class="bios-card">
+                <img src="bios.png" alt="Bios" class="bios-img">
+                <h4>1. SCPH1001.BIN – الولايات المتحدة (USA)</h4>
+                <p style="font-size:0.8rem; margin:10px 0; color:#ccc;">أشهر نسخة BIOS لأمريكا. متوافقة مع أغلب ألعاب NTSC-U. ينصح بها كثير من المحاكيات.</p>
+                <a href="https://psbios.me/download/ps1/SCPH1001.BIN" class="download-btn">تحميل</a>
+            </div>
+
+            <div class="bios-card">
+                <img src="bios.png" alt="Bios" class="bios-img">
+                <h4>2. SCPH7502.BIN – أوروبا (PAL)</h4>
+                <p style="font-size:0.8rem; margin:10px 0; color:#ccc;">نسخة مخصصة لمنطقة أوروبا. متوافقة مع ألعاب PAL (25FPS).</p>
+                <a href="https://psbios.me/download/ps1/SCPH-7502.BIN" class="download-btn">تحميل</a>
+            </div>
+
+            <div class="bios-card">
+                <img src="bios.png" alt="Bios" class="bios-img">
+                <h4>3. SCPH5500.BIN – اليابان (JP)</h4>
+                <p style="font-size:0.8rem; margin:10px 0; color:#ccc;">BIOS خاص بمنطقة اليابان. ضروري للألعاب اليابانية.</p>
+                <a href="https://psbios.me/download/ps1/SCPH5500.BIN" class="download-btn">تحميل</a>
+            </div>
+
+            <div class="bios-card">
+                <img src="bios.png" alt="Bios" class="bios-img">
+                <h4>4. SCPH7003.BIN – عالمي</h4>
+                <p style="font-size:0.8rem; margin:10px 0; color:#ccc;">نسخة تعتبر أقرب لنسخة عالمية. تعمل مع أغلب الألعاب من جميع المناطق.</p>
+                <a href="https://psbios.me/download/ps1/SCPH7003.BIN" class="download-btn">تحميل</a>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <div class="visitors-box">
+            <div class="visitor-item">
+                <span class="label">الزوار</span>
+                <img src="https://visitor-badge.laobi.icu/badge?page_id=thesoim_ps2_page&left_text=&right_color=%2316161e&left_color=%2316161e&right_text_color=%235e6aff" alt="Visitors" class="counter-img">
+            </div>
+        </div>
+        
+        <p style="margin-top: 15px;">&copy; 2025 جميع الحقوق محفوظة لدى <a href="https://t.me/soi7m" class="footer-link" target="_blank">ذا سويم</a></p>
+    </footer>
+
+    <script>
+        // تفعيل الاهتزاز (Vibration) عند الضغط
+        function vibratePhone() {
+            if (navigator.vibrate) {
+                navigator.vibrate(30); // اهتزاز خفيف جدا لمدة 30 جزء من الثانية
+            }
+        }
+
+        // إضافة مستمعي الأحداث لجميع الأزرار لتفعيل الاهتزاز
+        document.addEventListener('DOMContentLoaded', () => {
+            const allButtons = document.querySelectorAll('.btn-main, .action-btn, .back-btn, .copy-btn, .download-btn');
+            allButtons.forEach(btn => {
+                btn.addEventListener('click', vibratePhone);
+            });
+        });
+
+        // دالة خاصة للتعامل مع أزرار "قريباً" لدمج الاهتزاز مع الرسالة
+        function handleBtnClick(msgId) {
+            vibratePhone(); // تشغيل الاهتزاز
+            showPopup(msgId); // إظهار الرسالة
+        }
+
+        // دالة التنقل بين الصفحات
+        function navigateTo(elementId) {
+            vibratePhone(); // تشغيل الاهتزاز
+            // إخفاء جميع الأقسام
+            const sections = document.querySelectorAll('.container > div');
+            sections.forEach(sec => {
+                if(!sec.classList.contains('hidden')) {
+                    sec.classList.add('hidden');
+                }
+            });
+
+            // إظهار القسم المطلوب
+            const target = document.getElementById(elementId);
+            if (target) {
+                target.classList.remove('hidden');
+                target.classList.remove('fade-in');
+                void target.offsetWidth; 
+                target.classList.add('fade-in');
+            }
+            window.scrollTo(0,0);
+        }
+
+        // دالة إظهار رسائل "قريباً"
+        function showPopup(elementId) {
+            const popup = document.getElementById(elementId);
+            popup.style.display = 'block';
+            setTimeout(() => {
+                popup.style.display = 'none';
+            }, 2000);
+        }
+
+        // دالة نسخ النصوص
+        function copyToClipboard(elementId) {
+            vibratePhone(); // تشغيل الاهتزاز
+            const text = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                alert("تم نسخ الكود: \n" + text);
+            }).catch(err => {
+                console.error('فشل النسخ', err);
+            });
+        }
+
+        // --- كود تساقط الثلج ---
+        function createSnowflake() {
+            const snowContainer = document.getElementById('snow-container');
+            const snowflake = document.createElement('div');
+            snowflake.classList.add('snowflake');
+            
+            const size = Math.random() * 5 + 2 + 'px';
+            snowflake.style.width = size;
+            snowflake.style.height = size;
+            snowflake.style.left = Math.random() * 100 + 'vw';
+            snowflake.style.animationDuration = Math.random() * 3 + 2 + 's'; 
+            snowflake.style.opacity = Math.random();
+
+            snowContainer.appendChild(snowflake);
+
+            setTimeout(() => {
+                snowflake.remove();
+            }, 5000);
+        }
+
+        setInterval(createSnowflake, 100);
+
+    </script>
+</body>
+</html>
